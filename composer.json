@@ -1,0 +1,35 @@
+{
+  "name": "jiankechu/push_robot",
+  "type": "library",
+  "authors": [
+    {
+      "name": "jiankechu",
+      "email": "jianke.z@foxmail.com"
+    }
+  ],
+  "keywords": [
+    "php",
+    "swoole",
+    "hyperf",
+    "企业微信消息推送"
+  ],
+  "description": "企业微信消息推送",
+  "license": "MIT",
+  "require": {
+    "php": "~7.4",
+    "guzzlehttp/guzzle": "^7.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "ZJKe\\PushRobot\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "ZJKe\\PushRobotTest\\": "tests/"
+    }
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^9.5"
+  }
+}
