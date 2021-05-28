@@ -9,6 +9,4 @@ abstract class MsgTplAbstract implements MsgTplInterface
     const MSG_TYPE_MARKDOWN = 'markdown';
     public $type;
 
-    abstract public function getContent(): string;
-
 }

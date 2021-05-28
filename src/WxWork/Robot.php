@@ -5,6 +5,7 @@ namespace ZJKe\PushRobot\WxWork;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
+use ZJKe\PushRobot\Exception\LogicException;
 use ZJKe\PushRobot\Exception\RuntimeException;
 use ZJKe\PushRobot\MsgTplAbstract;
 use ZJKe\PushRobot\RobotAbstract;
@@ -12,36 +13,37 @@ use ZJKe\PushRobot\RobotAbstract;
 class Robot extends RobotAbstract
 {
     protected $robotType = 'wx_work';
+    private   $req       = [
+        "msgtype"  => "markdown",
+        "markdown" => [
+            "content"               => '',
+            "mentioned_list"        => [],
+            "mentioned_mobile_list" => [],
+        ]
+    ];
 
-    /**
-     * @throws GuzzleException
-     */
-    protected function pushMarkdown(MsgTplAbstract $msgTpl)
+    protected function setMarkdown(MsgTplAbstract $msgTpl)
     {
-        $req = [
-            "msgtype"  => "markdown",
-            "markdown" => [
-                "content"               => $msgTpl->getContent(),
-                "mentioned_list"        => [],
-                "mentioned_mobile_list" => [],
-            ]
-        ];
-        return $this->send($req);
+        $this->req['markdown']['content'] = $msgTpl->getContent();
+        return $this;
     }
 
     /**
      * @throws GuzzleException
-     * @throws RuntimeException
+     * @throws RuntimeException|LogicException
      */
-    private function send(array $req): \Psr\Http\Message\ResponseInterface
+    public function push(): \Psr\Http\Message\ResponseInterface
     {
+        if (empty($this->req)) {
+            throw new LogicException('未设置消息内容!');
+        }
         $client = new Client();
         $uri    = http_build_query([
             'key' => $this->config['key'],
         ]);
         $url    = sprintf('https://qyapi.weixin.qq.com/cgi-bin/webhook/send?%s', $uri);
         $resp   = $client->request('POST', $url, [
-            'json' => $req]);
+            'json' => $this->req]);
 
         if ($resp->getStatusCode() !== 200) {
             throw new RuntimeException('企业微信消息推送失败');

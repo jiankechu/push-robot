@@ -15,6 +15,7 @@ class TestRobot extends \ZJKe\PushRobotTest\TestCase
         ];
         $msg    = new \ZJKe\PushRobot\WxWork\MsgTplExceptionMarkdown(new Exception('test'));
         $msg->setEnv('test')->setParam(['a' => 'a'])->setUrl('/test');
-        $res = (new \ZJKe\PushRobot\WxWork\Robot($config))->push($msg);
+        $robot = (new \ZJKe\PushRobot\WxWork\Robot($config, $msg));
+        $robot->push();
     }
 }
